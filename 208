@@ -1,0 +1,61 @@
+1.JDK和JRE有什么区别
+  JDK,java develop kit java开发工具包，包括运行环境和开发环境（各种工具，javac之类的）
+  JRE，java runtime environment，java运行环境，一些基本类库和虚拟机
+  JDK>JRE>虚拟机
+2.==和equals的区别是什么
+  ==如果是基本数据类型，比较值是否一致，如果是对象，比较内存地址是否相同
+  equals默认和==一致，只是有的类修改了，比如string，比较指向的内容是否一致
+3.两个对象的hashcode相同，equals也一定一致吗
+  不一定，hashcode如何计算（https://blog.csdn.net/qq_38182963/article/details/78940047）
+  String 的hashCode计算
+  public int hashCode(){
+    int h=hash;
+    if(h == 0 && value.lenght > 0){
+      char val[] = value;
+      for(int i=0;i<value.length;i++){
+        h=31*h+val[i];
+      }
+      hash=h;
+    }
+    return h;
+   }
+  .为什么使用31
+    31*i=(i<<5)-i;
+4.final 在java中有什么用
+  final 类 不可被继承改写
+  final 方法 不可被改写
+  final 值 不可被修改
+5.Math.round(-1.5)
+  -1
+6.String不属于基本数据类型
+7.java中操作字符串的类有哪些
+  string 不可变，char[] value被final修饰
+  stringbuilder  可变，线程不安全
+  stringbuffer    可变，线程安全 方法被synchronized修饰
+8 String str="i"和String str=new String("i")有区别吗
+  有，"i"是字面量，在方法区，第一个直接指向方法区字面量，第二个指向堆内地址
+9.如何将字符串反转
+  string 没有reverse方法，stringbuffer和stringbuilder可以
+10.String类常用的方法有哪些
+   charAt trim equals replace machtches split substring
+11.抽象类必须有抽象方法吗
+   可以没有，甚至可以有Main方法
+12.普通类和抽象类有什么区别
+   abstract关键字
+   普通类不能有抽象方法
+   抽象类不能实例化
+13.抽象类能用final修饰吗
+  不可以
+14.接口和抽象类有什么区别
+  关键字
+  接口里的变量都是final类型，不能用private，抽象类可以有普通变量
+  接口里不能有非抽象方法，抽象类可以有（接口可以使用default方法）
+  接口多实现，抽象类单继承
+15.java中的io流
+  输入流输出流
+  字符流（16位）字节流（8位）
+16.Bio，Nio，Aio区别（https://zhuanlan.zhihu.com/p/66148226）
+  Bio ，Block io，同步阻塞，无论是等待建立连接或是传输数据，都会阻塞，程序不能像下执行
+  Nio ，New io ，同步非阻塞，主要组件：选择器，通道，缓冲
+  
+  
