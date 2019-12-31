@@ -143,4 +143,86 @@
     volatie不能被优化
   54.synchronized和lock有甚区别
     实现交替打印（1.synchronized和wait notify 2.lock condition 3.lockpart）
+    看一下Lock实现ReentrantLock
+   final void lock() {
+            if (compareAndSetState(0, 1))
+                setExclusiveOwnerThread(Thread.currentThread());
+            else
+                acquire(1);
+   }
+        
+    public final void acquire(int arg) {
+        if (!tryAcquire(arg) &&
+            acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+            selfInterrupt();
+    }
+    tryAcquire调用以下
+    final boolean nonfairTryAcquire(int acquires) {
+            final Thread current = Thread.currentThread();
+            int c = getState();
+            if (c == 0) {
+                if (compareAndSetState(0, acquires)) {
+                    setExclusiveOwnerThread(current);
+                    return true;
+                }
+            }
+            else if (current == getExclusiveOwnerThread()) {
+                int nextc = c + acquires;
+                if (nextc < 0) // overflow
+                    throw new Error("Maximum lock count exceeded");
+                setState(nextc);
+                return true;
+            }
+            return false;
+        }
+   acquireQueued（） 调用以下
+   final boolean acquireQueued(final Node node, int arg) {
+        boolean failed = true;
+        try {
+            boolean interrupted = false;
+            for (;;) {
+                final Node p = node.predecessor();
+                if (p == head && tryAcquire(arg)) {
+                    setHead(node);
+                    p.next = null; // help GC
+                    failed = false;
+                    return interrupted;
+                }
+                if (shouldParkAfterFailedAcquire(p, node) &&
+                    parkAndCheckInterrupt())
+                    interrupted = true;
+            }
+        } finally {
+            if (failed)
+                cancelAcquire(node);
+        }
+    }
+    addWaiter如以下：
+    private Node addWaiter(Node mode) {
+        Node node = new Node(Thread.currentThread(), mode);
+        // Try the fast path of enq; backup to full enq on failure
+        Node pred = tail;
+        if (pred != null) {
+            node.prev = pred;
+            if (compareAndSetTail(pred, node)) {
+                pred.next = node;
+                return node;
+            }
+        }
+        enq(node);
+        return node;
+    }
+    
+    二者区别：
+      用法
+      一个队列和两个队列
+      一个是对对象头，监视器的操作，一个是对线程的操作
+54 synchronized和lock的区别
+    synchronized是个关键字，jvm层面，lock是个java类
+    synchronized无法判断是否获取锁的状态，lock可以判断
+    synchronized会自动释放锁
+    synchronized可重入，不可中断，非公平
+55 synchronized和ReetrantLock区别
+  对获取锁的时间进行设置，避免一直阻塞
+  synchronized通过对象头实现，reentrantlock通过unsafe.park实现，lockSupport.park unpark(Thread)实现
     
