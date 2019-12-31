@@ -224,5 +224,22 @@
     synchronized可重入，不可中断，非公平
 55 synchronized和ReetrantLock区别
   对获取锁的时间进行设置，避免一直阻塞
-  synchronized通过对象头实现，reentrantlock通过unsafe.park实现，lockSupport.park unpark(Thread)实现
+  synchronized通过对象头实现，reentrantlock通过unsafe.park实现，unsafe实现
     
+55.说一下atomic的原理
+  我举得先看下unsafe类：
+    unsafe功能：
+      普通读写：读写一个object对象的field，直接从内存的一个地址读写
+      volatile读写：volatile读写一个object的field，volatile可以保证可见性和有序性
+      有序写：有序写一个object的field，保证有序性，不保证可见性
+      内存操作：申请内存，重新申请内存，释放内存，内存复制
+      cas相关：提供int，long，object的cas操作
+      偏移量相关：获取对象属性和静态属性的偏移量
+      线程调度：挂起线程，唤醒线程
+      类加载：定义类，创建对象，定义匿名内粗堡垒，判断是否加载类
+      内存屏障：读屏障，写屏障，读写屏障
+      
+      LockSupport基于unsafe实现
+      Atomic 值volatile ，所有的操作都通过unsafe
+56.什么是反射
+  反射是可以在运行时对类进行操作，可以在运行时拿到类的信息，拿到类的方法，字段，开可以newInstance生
