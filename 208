@@ -103,3 +103,44 @@
         轻量级锁：多线程，切换频繁
         重量级锁：多线程，占有时间长
      
+49 什么是死锁
+  多个线程竞争资源，陷入循环等待，如果没有一个线程放弃请求，永远不能向前进行
+50怎么防止死锁
+  死锁的四个条件：互斥，非抢占，占有并等待，循环等待，破坏条件：
+  一次申请所有的资源，申请不到即放弃，给资源编号
+51.ThreadLocal https://blog.csdn.net/X8i0Bev/article/details/101086604
+  ThreadLocal是一个本地线程副本变量工具类，各个线程都拥有一份线程私有的数据，线程之间的变量互不干扰，在高并发场景下，可以实现无状态的调用。
+  实现：每个thread内部有一个map，key是共享变量的名字，value是真正的变量副本
+  threadLocat的set
+  public void set(T value) {
+        Thread t = Thread.currentThread();
+        ThreadLocalMap map = getMap(t);
+        if (map != null)
+            map.set(this, value);
+        else
+            createMap(t, value);
+    }
+    public T get() {
+        Thread t = Thread.currentThread();
+        ThreadLocalMap map = getMap(t);
+        if (map != null) {
+            ThreadLocalMap.Entry e = map.getEntry(this);
+            if (e != null) {
+                @SuppressWarnings("unchecked")
+                T result = (T)e.value;
+                return result;
+            }
+        }
+        return setInitialValue();
+    }
+    应用场景：数据库连接，session
+   52.synchronized实现原理
+    普通方法，静态方法，同步代码块
+    重新中内存中取值，并锁定不能被修改，通过修改对象头，每个对象头有个monitor，monitor锁指针指向该该线程
+   53.synchronized和volatile的区别
+    volatile虽然保证了可见性，但是没有锁机制，同时能有多个线程访问到原始数据，然后一起修改更新回主存，因为并发性高，所以性能高
+    volatile只能修饰变量
+    volatie不能被优化
+  54.synchronized和lock有甚区别
+    实现交替打印（1.synchronized和wait notify 2.lock condition 3.lockpart）
+    
