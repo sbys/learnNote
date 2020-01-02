@@ -244,4 +244,44 @@
 56.什么是反射
   反射是可以在运行时对类进行操作，可以在运行时拿到类的信息，拿到类的方法，字段，开可以newInstance生
 57 什么是序列化，什么情况下需要序列化
-  把
+  把java对象的状态保存下来，字节流的形式，并可以从字节流中读取恢复java对象
+  网络数据传输，数据存储，远程接口调用
+58.动态代理是什么，有哪些应用
+   代理有动态代理和静态代理，静态代理类一般是在运行前生成
+   动态代理类可以在运行时生成
+   动态代理用于aop，事务，日志，权限这些
+59.怎么实现动态代理
+  java api：
+    被代理的类要实现一个接口，自己实现一个vocationHandler，里面实现逻辑，然后以Proxy.newSincetance()生成代理对象，直接执行
+  cglb：
+    Enhancer 可以设置superClass，设置MethodInterceptor，里面实现逻辑，不能增强final 方法
+60.为什么用使用克隆
+    有些对象初始化比较复杂，新建的对象和上一个只有很小的不同，clone是一个native方法，效率很高
+61.如何实现对象克隆
+    实现重写clone方法，clone里对每个属性进行克隆，要注意到object 有protected clone方法，也就是说，看起来好像可以不implements Cloneable接口，但是如果没有
+    implements Cloneable 直接调用clone会报CloneNotSupportedException
+    也可以通过序列化实现克隆
+62.深拷贝和浅拷贝
+  对于值来说：都一样
+  对于对象：深拷贝指向另一个地址，浅拷贝指向同一个地址
+63.jsp和servlet有什么区别
+  tomcat处理请求都是通过servlet来处理，jsp编译之后也是servlet
+  
+66.jsp的四种作用域
+  page（一个页面相关的对象和属性）
+  request（一个请求可能跨越多个页面，涉及多个web组件）
+  session
+  application 服务器全局属性
+67.session和cookie有什么区别
+  现在实现的session和cookie都属于session，都是为了记录会话的状态
+  cookie保存在客户端
+  session保存在服务器端
+  cookie保存session
+68 session的工作原理：
+  服务端调用getSession创建，类似于key-value的形式，把sessionId也就是key返回给客户端，客户端请求的时候拿着sessionId，服务端就能根据id找到相关信息
+  ，一般通过cookie传递或者通过url参数
+69.如果客户端禁止cookie，session还能用吗
+  只要能传递参数给服务端就可以，最简单的就是通过url传参
+70.spring mvc和struts的区别是什么
+  
+    
