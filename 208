@@ -283,5 +283,100 @@
 69.如果客户端禁止cookie，session还能用吗
   只要能传递参数给服务端就可以，最简单的就是通过url传参
 70.spring mvc和struts的区别是什么
+  Struts2是类级别的拦截，每个地址都对应一个action类，请求数据是通过set注入的，参数注入类中，每个接口都要配置，性能应该是比较低的
+  SpringMvc 是通过在DispatcherServlet中的doDispatch进行拦截的，每个controller方法方法对应自己的Request和response，参数直接注入方法，Controller默认
+  作用域是单例，默认对所有的请求，创建一个Controller
+  拦截机制：Strut2用自己的拦截机制，springMvc是aop方式，配置少
+  底层：Strtus的实现是基于个Filter，SpringMvc基于Servlet，
   
-    
+ 
+ 
+一个重点：Servlet，Filter，Listener，Interceptor
+  其中Servlet，Filter，Listener是java servlet官方的，Interceptor是一些mvc框架自定义的
+  Servlet就是接受请求，计算，做出返回
+  Listener 更像是对一些关键事件进行监听，比如spring用到的contextLoadListener，HttpSessionListener
+  Filter 是对HttpRequest和response进行截取，然后做处理
+SpringMVC处理流程：
+  因为在web.xml中配置了DispatcherServlet，还有/，对于它拦截到的请求
+  无论是doGet，还是doPost，或者是doPut，doDelte这些都是调用processRequest处理
+  processRequest前后是一些对属性的封装之类，发布监听事件之类，核心在doService中
+  doService的前面是一些属性的设置，比如几个重要的resolver，核心是doDispatch
+  几个核心的HandlerExecutionChain（核心，包括钩子和业务方法），HandlerMapping（负责url映射），HandlerAdater主要是反射执行（最终是handleRequestInternal-》invoka）
+  对于modelandview，如果只有数据，view为空，如果有view找到viewResolver，这个会找到并渲染
+      protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        HttpServletRequest processedRequest = request;
+        HandlerExecutionChain mappedHandler = null;
+        boolean multipartRequestParsed = false;
+        WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
+
+        try {
+            try {
+                ModelAndView mv = null;
+                Object dispatchException = null;
+
+                try {
+                    processedRequest = this.checkMultipart(request);
+                    multipartRequestParsed = processedRequest != request;
+                    //根据request的url获取对应的HandlerExecutionChain（Interchain），和方法
+                    mappedHandler = this.getHandler(processedRequest);
+                    if (mappedHandler == null) {
+                        this.noHandlerFound(processedRequest, response);
+                        return;
+                    }
+                    //然后得到HandlerAdapter
+                    HandlerAdapter ha = this.getHandlerAdapter(mappedHandler.getHandler());
+                    String method = request.getMethod();
+                    boolean isGet = "GET".equals(method);
+                    if (isGet || "HEAD".equals(method)) {
+                        long lastModified = ha.getLastModified(request, mappedHandler.getHandler());
+                        if ((new ServletWebRequest(request, response)).checkNotModified(lastModified) && isGet) {
+                            return;
+                        }
+                    }
+                    //拦截器前面的逻辑
+                    if (!mappedHandler.applyPreHandle(processedRequest, response)) {
+                        return;
+                    }
+                    //handlerAdapter 用反射执行
+                    mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+                    if (asyncManager.isConcurrentHandlingStarted()) {
+                        return;
+                    }
+
+                    this.applyDefaultViewName(processedRequest, mv);
+                    //拦截器
+                    mappedHandler.applyPostHandle(processedRequest, response, mv);
+                } catch (Exception var20) {
+                    dispatchException = var20;
+                } catch (Throwable var21) {
+                    dispatchException = new NestedServletException("Handler dispatch failed", var21);
+                }
+
+                this.processDispatchResult(processedRequest, response, mappedHandler, mv, (Exception)dispatchException);
+            } catch (Exception var22) {
+                this.triggerAfterCompletion(processedRequest, response, mappedHandler, var22);
+            } catch (Throwable var23) {
+                this.triggerAfterCompletion(processedRequest, response, mappedHandler, new NestedServletException("Handler processing failed", var23));
+            }
+
+        } finally {
+            if (asyncManager.isConcurrentHandlingStarted()) {
+                if (mappedHandler != null) {
+                    mappedHandler.applyAfterConcurrentHandlingStarted(processedRequest, response);
+                }
+            } else if (multipartRequestParsed) {
+                this.cleanupMultipart(processedRequest);
+            }
+
+        }
+    }
+
+71.如何避免sql注入
+  使用PreparedStatement预编译
+72.throw和throws区别
+  throws在方法上抛出，往上传，不处理
+  throw代码里抛出
+73.final,finally,finalize 区别
+  final 类，方法，变量
+  finally try catch finally必须执行
+  finalize 要被gc的时候会执行的方法
