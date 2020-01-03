@@ -402,5 +402,11 @@ SpringMVC处理流程：
     exception通常是可以预料到的，没有error严重，catch到就可以继续执行，又分为检查异常和非检查异常（RuntimeException）,检查异常必须在写代码的时候trycatch，
     比如ioexception，非检查异常可以不catch
     error通常是问题比较严重，jvm级别的，outofmemory这些，一般出现就差不多gg了
- 79.http响应码301和302区别
-    
+ 79.http响应码301和302区别，以及重定向和forward的区别，浏览器是怎么处理的
+    301永久重定向 浏览器缓冲新地址，以后直接请求新地址
+    302临时重定向q 浏览器每次先收到302，再请求新地址，response.sendRedirect();
+ 80.forward和redirect的区别
+    地址栏没有变化
+    带着同样的参数就过去了，redirect传参比较麻烦
+ 81.简述TCP和UDP的区别：
+  
