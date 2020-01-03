@@ -380,3 +380,21 @@ SpringMVC处理流程：
   final 类，方法，变量
   finally try catch finally必须执行
   finalize 要被gc的时候会执行的方法
+74.try,catch,finally中，如果catch中return了，finall是否会执行
+  public static int a(){
+        int a=10;
+        try{
+            a=20;
+            a=10/0;
+            return a;
+        }catch (Exception e){
+            return a;
+        }finally {
+            a=30;
+            
+        }
+    }
+    返回试一下上面这个方法，联想一下函数执行过程操作数栈，出口地址相关，其实就是在return的时候把操作数的值赋给某个地址，然后继续向下执行
+ 78.常见的异常类有哪些
+    throwable->error
+    throwable->exception
