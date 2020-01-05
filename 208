@@ -409,4 +409,145 @@ SpringMVC处理流程：
     地址栏没有变化
     带着同样的参数就过去了，redirect传参比较麻烦
  81.简述TCP和UDP的区别：
+    物理层，数据链路层，网络层，传输层，会话层，表示层，应用层
+    tcp和udp都是传输层协议
+    tcp提供可靠的面向连接的服务，udp是无连接的
+    tcp传输的数据无差错，不丢失，按序到达，udp尽最大努力交付
+    tcp通过校验和，确认机制，序号标识，滑动窗接口保证可靠性
+    udp实时性好，工作效率高，tcp需要建立连接，一对一，upd可以一对多
+    tcp要占系统资源，比如缓冲
+ 82. tcp三次握手，两次不行吗，为什么
+    说法一：如果只有两次握手，AB建立连接，如果之前因为网络问题滞留的请求建立连接的报文又发到B，就会又建立一次连接，如果三次的话，已经有了连接，不会重复建立
+    说法二：其实根源是为了双方同步序列号，分别发送自己的序号，并得到确认
+83. tcp粘包是怎么产生的
+    假设客户端分别发送了两个数据包D1和D2给服务端，由于服务端一次读取到字节数是不确定的，可能存在以下几种情况：
+      服务端分两次读取到了两个独立的数据包，分别是D1和D2,没有粘包和拆包
+      服务端一次接收到了两个数据包，D1和D2粘合在一起，称之为TCP粘包
+      服务端分两次读取到了数据包，第一次读取了完整的D1和D2包的部分内容，第二次读取到了D2包的剩余内容，这称之为tcp拆包
+      ，，，
+84 OSI的七层模型都有哪些
+    应用层：网络服务与最终用户的一个接口
+    表示层：数据的表示，安全，压缩
+    会话层：建立，管理，终止会话
+    传输层：定义传输数据的协议端口号，以及流控和差错校验
+    网络层：进行逻辑地址寻址，实现不同网络之间的路径选择
+    数据链路层：建立逻辑连接，进行硬件地址寻址，差错校验等功能
+    物理层：建立，维护，断开物理连接
+85. get和post请求有哪些区别
+    都是请求方法，还有option，put，trace这些
+    get上传参数只能通过url，有长度和编码限制，且会直接显示在地址栏上
+    post通过请求正文传参，不会显示在地址栏，可以有多种形式，text，xml，json这些，编码多种
+86.如何实现跨域
+  什么是跨域：前端调用的后端接口不属于同一个域（域名或端口不同），就会产生跨域问题，也就是说你的应用访问了该应用域名或端口之外的域名或端口
+ 
+88.说一下你熟悉的设计模式
+   创建型模式：工厂方法模式，抽象工厂模式，单例模式，建造者模式，原型模式
+   结构性模式：适配器模式，装饰器模式，代理模式，外观模式，桥接模式，组合模式，享元模式
+   行为型模式：策略模式，模板方法模式，观察者模式，迭代器模式，责任链模式，命令模式，备忘录模式，状态模式，访问者模式，中介者模式，解释器模式
+   设计模式遵循的原则：对扩展开发，对修改关闭
+   里氏替换：只有当衍生类可以替换掉基类，软件单位的功能不受到影响时，基类才能真正被复用，衍生类也能在基类的基础上增加新的行为
+   依赖倒置原则：
+   接口隔离：使用多个隔离的接口来降低耦合度
+   迪米特法则：一个实体应当尽量少与其他实体之间发生相互作用
+   合成复用：
+    从 
+   工厂模式：
+   简单工厂：
+   interface food{}
+   class A implements food{}
+   class B implements food{}
+   class C implements food{}
+   class Factory{
+      public static food getInstance(String name){
+          food x=null;
+          if(name.equals("A")){
+              x=new A();
+          }else if(name.equals("B")){
+              x=new B();
+          }else{
+              x=new C();
+          }
+          return x;
+      }
+   }
+   抽象工厂：
+   interface food{}
+   interface Factory{
+      food getInstance();
+   }
+   class A implements food{}
+   class B implements food{}
+   class FactoryA implements Factory{
+      food getInstance(){
+          return new A();
+      }
+   }
+   class FactoryB implements Factory{
+      food getInstance(){
+          return newB();
+      }
+   }
+   public class AbstractFactory{
+      public static void main(String []args){
+          food x=new FactoryA().getInstance();
+      }
+   }
+   单例模式
+   public class SingleTon{
+      public static SingleTon instance=null;
+      public static SingleTon getInstance(){
+          if(instance==null){
+              synchronized(this){
+                  instance=new SingleTon();
+              }
+          }else
+          return instance;
+      }
+   }
+   public class SingleTon{
+      public static class Inner{
+        puglic static SingleTon instance=new SingleTon();
+      }
+      public static SingleTon getInstance(){
+          return Inner.instance;
+      }
+   }
+   建造者模式：
+   原型模式（实现clone方法）
+   适配器模式，为类增加新的功能：类适配，对象适配，接口适配
+   装饰模式
+   代理模式
+   外观模式
+   桥接模式
+   组合模式
+   享元模式（使用共享对象的方法，用来尽可能减少内存使用量。通常使用工厂类辅助）
+   abstract class flywei{}
+   public class Flyweight extends flywei{
+    Object obj;
+    public Flyweight(Object obj){
+    this.obj=obj;
+    }
+   }
+   class FlyweightFactory{
+    private HashMap<Object,Flyweight> data;
+    public FlyweightFactory(){
+      data=new HashMap<>();
+    }
+    public Flyweight getFlyweight(Object object){
+      if(data.containsKey(object)){
+        return data.get(object);
+      }else{
+        Flyweight flyweight=new Flyweight(object);
+        data.put(object,flyweight);
+        return flyweight;
+      }
+    }
+   }
+89.简单工厂和抽象工厂有什么区别
+90.为什么要使用spring
+    个人理解：提供了一个框架，可以很方便地进行开发，进行web开发时，只需要开发bean
+    1.简介
+      目的：解决企业应用开发的复杂性
+      功能：使用基本的javaBean替代EJB
+      范围：任何java应用
   
