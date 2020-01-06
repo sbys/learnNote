@@ -545,9 +545,101 @@ SpringMVC处理流程：
    }
 89.简单工厂和抽象工厂有什么区别
 90.为什么要使用spring
-    个人理解：提供了一个框架，可以很方便地进行开发，进行web开发时，只需要开发bean
+    个人理解：作为一个容器来说，提供了很多便利，提供了一个框架，可以很方便地进行开发，进行web开发时，只需要开发bean
     1.简介
       目的：解决企业应用开发的复杂性
       功能：使用基本的javaBean替代EJB
       范围：任何java应用
+      Spring 是一个轻量级的控制反转和面向切面的容器框架
+      轻量级
+	无论从大小还是开销来说都是轻量的，使用最小功能比如IOC和aop用到的非常小，非侵入式，没有说继承某个类，大部分都是通过注解
+      控制反转
+	Spring通过控制反转实现了松耦合。当我们没有使用spring时，使用一个对象需要自己去new
+                如果有一些对象属性，还要new这些属性，使用的时候耦合度较高，也比较复杂，使用ioc功能，
+	容器在初始化的时候，就会把我们需要的对象放在容器中，并且注入他的各个属性，容器在初始化一个
+	对象的时候，会发现它的依赖，然后先注入依赖，再继续初始化对象
+      面向切面
+	允许动态对某些代码进行功能增强，而且实现了业务和增强功能的分离
+      容器
+	根据配置文件可以配置bean如何被创建，bean可以创建一个单独的实例或者每次需要时都生成一个新的实例，以及他们是如何关联的
+      框架
+	集成框架方便
+91.解释aop
+	aop是相对于oop而言的，面向对象编程是一种纵向的关系，
+	可以很容易的通过继承，多态实现模板行为，但是这些是建立再
+	实现公共行为的类继承自同一个类，而且都是静态的，而且这些公共行为
+	往往和类有一些关系，而oop是为一些不相关的类添加一些和业务无关的行为
+	比如日志，权限校验这些，aop技术利用动态代理的技术，可以把这些分散在各处且
+	和业务无关的代码封装在切面中插入。其实就是在执行流程中，找到一个切入点，将
+	实现了新功能的切面切入。Aop的两个关注点：核心关注点和横切关注点。连接点和切入点
+92.解释一下什么是ioc
+	其实翻译成依赖注入的话是很好理解的，就是说初始化一个对象的时候，发现它的某些属性
+	也就是它依赖这个属性，需要初始化属性，把这个属性注入
+	如果翻译成控制反转的话，当没有框架的时候，需要初始化一个对象，它的属性需要使用主动去初始化，注入
+	当有了框架之后，如果需要，容器自动注入，用户变成了被动，控制权交给了配置文件
+93.Spring有哪些主要模块
+	基本核心容器：core，beans，context，spel
+	AOP
+	web
+	data
+	测试
+94.Spring常用的注入方式有哪些
+	a.构造方法注入
+		<bean id="userService" class="com.example.service.impl.UserService>
+			<constructor-arg name="userDao" ref="userDaoJdbc"></constructor-arg>
+		</bean>
+	b.setter注入
+		<bean id="userService" class="com.example.service.impl.UserService">
+			<property name="userDao" ref="userDao"/>
+		</bean>
+	c.基于注解的注入
+		autowire:constructor,byName,byType
+			constructor:通过构造方法进行自动注入，spring会匹配与构造方法参数类型一致的bean进行注入
+			byName:被注入bean的id名必须与set方法后半截匹配，并且id名称的第一个单词首字母必须小写
+			byType:查找所有的set方法，将符合参数类型的bean注入
+		四种可以注册的bean：
+			Component，Repository，Controller，Service
+		自动注入的注解：
+			Resource（默认byName，如果没有bytype，如果多个qualifier）
+			Autowired（默认byType）
+95.spring中的bean是线程安全的吗
+	如果是单例的话，就是安全的，容器没有线程安全方面的操作
+96.spring支持几种bean的作用域
+	Singleton
+	prototype
+	request
+	session
+	globalsession
+	默认Singleton
+97.spring自动装配bean有哪些方式
+	xml配置，代码配置
+98.spring事务实现方式有哪些
+	@Transactional（rollbackFor={RuntimeException,Error.class}）
+	rollbackFor:触发回滚的异常，默认是RuntimeException和error
+99.spring的事务隔离|数据库的事务隔离
+	
+	
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
