@@ -617,6 +617,47 @@ SpringMVC处理流程：
 	@Transactional（rollbackFor={RuntimeException,Error.class}）
 	rollbackFor:触发回滚的异常，默认是RuntimeException和error
 99.spring的事务隔离|数据库的事务隔离
+	未提交读
+	已提交读
+	可重复读
+	可串行化
+        造成的问题：脏读（读取到未提交的数据），不可重复读（在同一个事务中，前后两次读取到的不一样），幻读（执行完自己的草走发现多出来一条数据）
+100.spring mvc的运行流程
+	加载的时候把handlerMapping，handlerAdapter加载，handlerMapping是url和地址的封装，收到一个请求，符合路径匹配，交给DispatcherServlet，zhixing
+	doDispatch，根据url得到一个handlerExecution（封装了intercetpor和method），然后根据类型得到adapter，执行一个类似preHandler 后面postHandler
+	中间invoke，得到ModeAndView，如果view说明直接返回数据，如果view不为空，从viewResolver里面找到对一个视图，渲染数据
+101.Spring MVC有哪些组件
+	dispatcherServlet
+	controller
+	handlerMapping
+	handlerAdapter
+	ModelAndView
+	ViewResolver
+	Intercetpor
+102. @RequestMapping的作用
+	使用的时候，表示这个接口的地址以及方法，还要数据类型之类的作用，作为一个注解
+	当然是在初始化的时候告诉系统这个注解修饰的方法是接口方法，放在响应的map里
+	value method consume（请求数据类型） produces（返回数据类型） params（请求里必须包含某些参数） header（请求头必须包含某些字段）
+103 Autowired 的作用是什么
+	根据type自动注入，type不止一个时，qualifier根据名称注入
+104.什么是spring boot
+	其实spring boot真正的实现和普通的ssm项目没有什么不同
+	只是帮我们做了以前复杂的配置，现在导包经常会用到一个spring-boot-starter，，，或者第三方包-starter,打开这些包，可以看到
+	只是做了一些自动从application.properties的操作，当然，这就导致，如果你导入某些包，必须在application。properties中配置，
+	要不然会报错，如果新增配置或者修改的话，需要覆盖，还有就是内嵌了tomcat容器可以直接以jar包形式运行
+105. 为什么要用spring boot
+	减少版本冲突
+	简化配置
+	简化部署
+106.spring boot的核心配置文件
+	application(-dev).properties
+107.spring boot的配置文件有哪几种
+	properties yml
+108.spring boot实现热部署
+	spring-boot-devtools
+	配置路径
+
+
 	
 	
   
