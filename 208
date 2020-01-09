@@ -656,8 +656,54 @@ SpringMVC处理流程：
 108.spring boot实现热部署
 	spring-boot-devtools
 	配置路径
+109.jpa和bibernate有什么区别
+	jpa： java persistence api
+	hibernate是实现，使用的话可以不接触到sql，面向对象的思想，每个表都是一个类，entity，id这些，更换数据库方便，性能不好控制
+	
+	mybatis面向数据库，更方便，性能好控制，切换数据库不方便
+110.什么是spring cloud
+	spring cloud提供了一个比较完整的微服务架构，当然核心组件都是使用其他比较成熟的框架，提供了一个架子，比较完整，从服务注册中心，配置中心，网关，断路器，组在均衡，控制总线这些都有
+111.什么是断路器
+	因为微服务架构中一次网络请求可能涉及到多个远程调用，有可能会卡在某一步，还占用资源，所以提供了断路保护机制，当某个请求超过一定时间阈值的时候，就会触发，执行某个回调，返回固定信息
+112.spring cloud的核心组件有哪些
+	服务管理：服务注册，服务发现，服务调用
+	客户端负载均衡：ribbon
+	api网关：
+	配置中心：消息总线
+	断路保护：
+125.mybatis中#{}和${}的区别
+	#是占位符，会进行预编译，防止注入调用Preparestatement，${}直接替换
+126.mybatis有几种分页方式
+	数组分页，查询到所有数据，然后再service里计算拿出
+	sql分页，要传参，在sql里取出参数，比较定制化
+	拦截器分页，mybatis执行过程中拼接sql    limit index，pagesize
+	rowbounds分页，也是取出所有的，然后拿合适的，在mybatis执行流程中比较靠后对结果共处理
 
+127.rowbounds是一次性拿去所有结果吗
+	是
+128.mybatis逻辑分页和物理分页的区别
+	逻辑分页把所有数据都拿出来然后取出数据，适用于数据量小
+	物理分页只拿出合适数据，适用于数据量大
+129.mybatis是否支持延迟加载，延迟加载的原理是什么（https://zhuanlan.zhihu.com/p/84942970）
+	支持1对1和1对多的延迟加载
+	使用：lazyLoadingEnabled表示是否开启
+		aggressiveLazyLoading 
+	类似于连接查询的操作，当一个属性没有被用到的不会查询，用到
 
+	<mapper namespace="cn.xh.dao.UserDao">
+    		<select id="findCategoryWithLazingload" resultMap="categoryMap">
+        			select * from category
+    		</select>
+    		<resultMap id="categoryMap" type="cn.xh.pojo.Category">
+        			<id column="cid" property="cid"></id>
+        			<result column="cname" property="cname"></result>
+			<collection property="books" column="cid" select="findBookWithLazy"></collection>
+    		</resultMap>
+		<select id="findBookWithLazy" parameterType="int" resultType="cn.xh.pojo.Book">
+        			select * from book where cid = #{cid}
+    		</select>
+	</mapper>
+130.mybatis的一级缓存和二级缓存
 	
 	
   
